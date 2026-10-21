@@ -65,6 +65,11 @@ const fa = {
   daysUnit: "روز",
   downloadPdf: "دانلود PDF",
   preparingPdf: "در حال ساخت PDF…",
+  loading: "در حال آماده‌سازی ماشین‌حساب…",
+  calculating: "در حال محاسبه…",
+  updated: "به‌روز شد",
+  pdfReady: "فایل PDF آماده و دانلود شد",
+  pdfPage: (i: number, n: number) => `صفحه ${i.toLocaleString("fa-IR")} از ${n.toLocaleString("fa-IR")}`,
 
   costMix: "ترکیب هزینه",
   costMixLead: "تفکیک هزینه‌ها بر اساس نوع",
@@ -170,6 +175,11 @@ const en: Dict = {
   daysUnit: "days",
   downloadPdf: "Download PDF",
   preparingPdf: "Preparing PDF…",
+  loading: "Getting the calculator ready…",
+  calculating: "Calculating…",
+  updated: "Up to date",
+  pdfReady: "Your PDF is ready and downloaded",
+  pdfPage: (i: number, n: number) => `Page ${i} of ${n}`,
 
   costMix: "Cost mix",
   costMixLead: "Where the budget goes",

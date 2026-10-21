@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { DICTS, type Lang } from "@/lib/i18n.ts";
+import { Icon } from "./Icons.tsx";
 
 export function LoginForm({ lang, next }: { lang: Lang; next?: string }) {
   const t = DICTS[lang];
@@ -9,6 +10,8 @@ export function LoginForm({ lang, next }: { lang: Lang; next?: string }) {
   const [show, setShow] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [ok, setOk] = useState(false);
+  const [shake, setShake] = useState(0);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -22,12 +25,15 @@ export function LoginForm({ lang, next }: { lang: Lang; next?: string }) {
         body: JSON.stringify({ password }),
       });
       if (res.ok) {
+        setOk(true);
+        await new Promise((r) => setTimeout(r, 450));
         const target = next && next.startsWith(`/${lang}`) && !next.startsWith("//") ? next : `/${lang}`;
         window.location.assign(target);
         return;
       }
       const data = await res.json().catch(() => ({}));
       setError(data?.error === "not-configured" ? t.notConfigured : t.wrongPassword);
+      setShake((n) => n + 1);
     } catch {
       setError(t.networkError);
     }
@@ -40,10 +46,14 @@ export function LoginForm({ lang, next }: { lang: Lang; next?: string }) {
         {t.password}
       </label>
       <div
-        className={`flex items-center rounded-2xl border bg-canvas/60 transition focus-within:border-teal focus-within:bg-white ${
-          error ? "border-orange" : "border-transparent"
+        key={shake}
+        className={`flex items-center rounded-2xl border bg-canvas/60 transition focus-within:border-teal focus-within:bg-white focus-within:shadow-[0_0_0_4px_rgba(35,152,173,0.12)] ${
+          error ? "shake border-orange" : "border-transparent"
         }`}
       >
+        <span className="ms-4 text-muted">
+          <Icon.Lock size={18} />
+        </span>
         <input
           id="password"
           type={show ? "text" : "password"}
@@ -78,11 +88,19 @@ export function LoginForm({ lang, next }: { lang: Lang; next?: string }) {
       <button
         type="submit"
         disabled={busy || !password}
-        className="group mt-3 flex h-14 w-full items-center justify-between rounded-full bg-ink ps-6 pe-2 text-[16px] text-white transition disabled:opacity-50"
+        className={`press group mt-3 flex h-14 w-full items-center justify-between rounded-full ps-6 pe-2 text-[16px] text-white disabled:opacity-60 ${
+          ok ? "bg-teal" : "bg-ink"
+        }`}
       >
         <span>{busy ? t.checking : t.enter}</span>
-        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-orange transition group-hover:scale-105">
-          <ArrowIcon />
+        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-orange transition-transform duration-300 group-hover:scale-105">
+          {ok ? (
+            <Icon.Check size={18} className="check-in text-teal" />
+          ) : busy ? (
+            <span className="h-4 w-4 animate-spin rounded-full border-2 border-orange border-t-transparent" />
+          ) : (
+            <ArrowIcon />
+          )}
         </span>
       </button>
     </form>

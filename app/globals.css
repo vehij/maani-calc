@@ -107,15 +107,17 @@ input[type="number"]::-webkit-outer-spin-button {
   margin: 0;
 }
 
-:focus-visible {
-  outline: 2px solid var(--color-teal);
-  outline-offset: 2px;
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--color-teal);
+    outline-offset: 2px;
+  }
 }
 
 @keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(12px) scale(0.985);
   }
   to {
     opacity: 1;
@@ -123,12 +125,216 @@ input[type="number"]::-webkit-outer-spin-button {
   }
 }
 .rise {
-  animation: rise 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation: rise 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+/* SVG strokes drawn with pathLength="1" */
+@keyframes draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.draw {
+  stroke-dasharray: 1;
+  animation: draw 1s cubic-bezier(0.45, 0, 0.2, 1) both;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+.fade-in {
+  animation: fade-in 0.8s ease both;
+}
+
+@keyframes grow-y {
+  from {
+    transform: scaleY(0.15);
+    opacity: 0.3;
+  }
+}
+.grow-y {
+  transform-origin: bottom;
+  animation: grow-y 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes pop {
+  from {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.08);
+  }
+}
+.pop {
+  animation: pop 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes float {
+  50% {
+    transform: translateY(-7px);
+  }
+}
+.float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes glow {
+  50% {
+    opacity: 0.65;
+    transform: scale(1.06);
+  }
+}
+.glow {
+  animation: glow 5s ease-in-out infinite;
+}
+
+@keyframes ping-soft {
+  0% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+.ping-soft {
+  animation: ping-soft 1.1s ease-out infinite;
+}
+
+@keyframes check-in {
+  from {
+    transform: scale(0.3) rotate(-25deg);
+    opacity: 0;
+  }
+}
+.check-in {
+  animation: check-in 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.4) both;
+}
+
+@keyframes toast-in {
+  from {
+    transform: translate(-50%, 16px);
+    opacity: 0;
+  }
+}
+.toast {
+  animation: toast-in 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes number-flash {
+  0% {
+    color: var(--color-teal);
+  }
+}
+.flash {
+  animation: number-flash 0.9s ease both;
+}
+
+/* Splash */
+@keyframes m-reveal {
+  from {
+    clip-path: inset(0 100% 0 0 round 22px);
+    transform: scale(0.85);
+  }
+  to {
+    clip-path: inset(0 0 0 0 round 22px);
+    transform: none;
+  }
+}
+.splash-mark {
+  animation: m-reveal 0.7s cubic-bezier(0.6, 0, 0.2, 1) both;
+}
+.splash-type {
+  animation: rise 0.6s 0.35s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@keyframes bar-load {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+.splash-bar {
+  animation: bar-load 0.95s cubic-bezier(0.5, 0, 0.2, 1) both;
+}
+[dir="rtl"] .splash-bar {
+  animation-name: bar-load-rtl;
+}
+@keyframes bar-load-rtl {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes shake {
+  20%,
+  60% {
+    transform: translateX(-6px);
+  }
+  40%,
+  80% {
+    transform: translateX(6px);
+  }
+}
+.shake {
+  animation: shake 0.4s ease both;
+}
+
+.press {
+  transition:
+    transform 0.18s ease,
+    background-color 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+.press:active {
+  transform: scale(0.96);
+}
+
+.lift {
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+@media (hover: hover) {
+  .lift:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 30px -18px rgb(0 0 0 / 0.25);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .rise {
-    animation: none;
+  .rise,
+  .draw,
+  .fade-in,
+  .grow-y,
+  .pop,
+  .float,
+  .glow,
+  .ping-soft,
+  .check-in,
+  .toast,
+  .flash,
+  .splash-mark,
+  .splash-type,
+  .splash-bar,
+  .shake {
+    animation: none !important;
+  }
+  .draw {
+    stroke-dasharray: none;
   }
   * {
     transition: none !important;

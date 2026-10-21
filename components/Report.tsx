@@ -2,7 +2,7 @@ import type { Estimate, PhaseKey } from "@/lib/engine.ts";
 import { DICTS, type Lang } from "@/lib/i18n.ts";
 import type { ProjectType } from "@/lib/presets.ts";
 import { currencyUnit, days, longDate, money, moneyShort, num, pct } from "@/lib/format.ts";
-import { LogoMark } from "./Brand.tsx";
+import { LogoMark, Logotype } from "./Brand.tsx";
 import { FilmStack } from "./Illustrations.tsx";
 import { DayGrid, MIX_COLORS, MixBars, PHASE_COLORS, PhaseArcs } from "./Charts.tsx";
 
@@ -44,8 +44,8 @@ export function Report({
       <div className="flex items-center gap-3">
         <LogoMark size={38} />
         <div className="leading-tight">
-          <div className="text-[15px] font-semibold">{t.studio}</div>
-          <div className="text-[11px] text-muted">{t.appName}</div>
+          <Logotype height={16} className="block" />
+          <div className="mt-1 text-[11px] text-muted">{t.appName}</div>
         </div>
       </div>
       <div className="text-end text-[11px] leading-5 text-muted">
@@ -136,6 +136,7 @@ export function Report({
           </div>
           <div className="mt-4">
             <MixBars
+              animate={false}
               count={48}
               height={54}
               segments={[
@@ -252,7 +253,7 @@ export function Report({
         <div className="mt-6 grid grid-cols-[1fr_1.25fr] gap-4">
           <div className="rounded-[22px] border border-line p-6">
             <div className="text-[17px] font-light">{t.phasesTitle}</div>
-            <PhaseArcs est={est} className={`mt-5 w-full ${lang === "fa" ? "-scale-x-100" : ""}`} />
+            <PhaseArcs animate={false} est={est} className={`mt-5 w-full ${lang === "fa" ? "-scale-x-100" : ""}`} />
             <div className="mt-3 grid grid-cols-3 gap-2">
               {PHASES.map((k) => (
                 <div key={k}>
@@ -272,7 +273,7 @@ export function Report({
               </div>
             </div>
             <div className="mt-5">
-              <DayGrid est={est} />
+              <DayGrid animate={false} est={est} />
             </div>
             <div className="mt-4 flex gap-4 text-[11px] text-muted">
               {PHASES.map((k) => (

@@ -1,19 +1,65 @@
 import type { Dict } from "@/lib/i18n.ts";
 
-export function LogoMark({ size = 40 }: { size?: number }) {
+// Glyphs from the studio's MAANI logotype (MAANI.svg), cropped to their bounds.
+const M_PATH =
+  "M157.13,66.63h.39c2.66,0,4.81,2.15,4.81,4.81v22.24c0,.66-.53,1.19-1.19,1.19h-.63c-2.63,0-4.75-2.13-4.75-4.75v-9.58c0-1.12-1.4-1.62-2.11-.75l-5.79,7.08c-.26,.32-.65,.5-1.06,.5h0c-.41,0-.79-.18-1.05-.5l-5.87-7.14c-.71-.86-2.11-.36-2.11,.76v13.2c0,.66-.53,1.19-1.19,1.19h-.63c-2.63,0-4.75-2.13-4.75-4.75v-18.68c0-2.66,2.15-4.81,4.81-4.81h.4c.46,0,.89,.21,1.18,.57l8.26,10.3c.48,.59,1.38,.59,1.86,0l8.26-10.3c.29-.36,.72-.57,1.18-.57Z";
+
+const REST_PATHS = [
+  "M186.1,84.18c.12-1.02,.98-1.81,2.03-1.81s1.91,.79,2.03,1.81h1.01c-.13-1.57-1.43-2.82-3.04-2.82s-2.91,1.24-3.04,2.82h1.01Z",
+  "M231.84,76.93c1.47,1.61,2.2,3.85,2.2,6.7v10.37c0,.49-.4,.88-.88,.88h-.54c-2.71,0-4.91-2.2-4.91-4.91v-5.98c0-1.29-.32-2.3-.97-3.03-.65-.73-1.53-1.09-2.66-1.09-1.24,0-2.23,.42-2.99,1.25-.75,.83-1.13,1.92-1.13,3.27v10.49h-1.51c-2.66,0-4.82-2.16-4.82-4.82v-10.37c0-2.62,2.12-4.74,4.74-4.74h0c.43,0,.8,.31,.87,.73h0c.11,.65,.87,.96,1.39,.56s1.08-.74,1.69-1.01c1.09-.48,2.29-.73,3.61-.73,2.47,0,4.44,.81,5.91,2.42Z",
+  "M238.26,71.99c-.69-.65-1.03-1.47-1.03-2.46s.35-1.86,1.05-2.5c.7-.65,1.59-.97,2.66-.97s1.96,.32,2.66,.97c.7,.65,1.05,1.48,1.05,2.5s-.34,1.82-1.03,2.46c-.69,.65-1.58,.97-2.68,.97s-2-.32-2.68-.97Zm.75,2.95h3.83c.69,0,1.25,.56,1.25,1.25v17.43c0,.69-.56,1.25-1.25,1.25h-.36c-2.61,0-4.73-2.12-4.73-4.73v-13.95c0-.69,.56-1.25,1.25-1.25Z",
+  "M176.04,88.15c-1.97,0-3.56-1.59-3.56-3.56s1.59-3.56,3.56-3.56c.2,0,.39,.02,.58,.05-1.12-.91-2.56-1.46-4.11-1.46-3.51,0-6.37,2.8-6.48,6.28h0c-.01,.07-.01,.14-.01,.21,0,1.96,.86,3.71,2.23,4.9t.01,0c1.14,.99,2.63,1.59,4.25,1.59,3.43,0,6.24-2.66,6.48-6.03-.64,.95-1.73,1.57-2.95,1.57Z",
+  "M186.11,84.19c0-.11-.01-.21-.02-.31-.15-1.51-1.42-2.7-2.96-2.74l1.98-.95c-.57-1.19-1.37-2.24-2.35-3.11-.02-.02-.05-.05-.07-.06-.07-.07-.14-.13-.21-.19-.01,0-.02-.02-.03-.03-1.74-1.43-3.98-2.3-6.42-2.3-4.15,0-7.71,2.49-9.27,6.07,1.43-1.11,3.23-1.78,5.19-1.78,4.62,0,8.37,3.72,8.44,8.32h0v2.85c0,2.71,2.2,4.91,4.91,4.91h.81v-10.28c0-.13,0-.27-.01-.4Z",
+  "M199.84,88.15c-1.97,0-3.56-1.59-3.56-3.56s1.59-3.56,3.56-3.56c.2,0,.39,.02,.58,.05-1.12-.91-2.56-1.46-4.11-1.46-3.51,0-6.37,2.8-6.48,6.28h0c-.01,.07-.01,.14-.01,.21,0,1.96,.86,3.71,2.23,4.9t.01,0c1.14,.99,2.63,1.59,4.25,1.59,3.43,0,6.24-2.66,6.48-6.03-.64,.95-1.73,1.57-2.95,1.57Z",
+  "M209.91,84.19c0-.11-.01-.21-.02-.31-.15-1.51-1.42-2.7-2.96-2.74l1.98-.95c-.57-1.19-1.37-2.24-2.35-3.11-.02-.02-.05-.05-.07-.06-.07-.07-.14-.13-.21-.19-.01,0-.02-.02-.03-.03-1.74-1.43-3.98-2.3-6.42-2.3-4.15,0-7.71,2.49-9.27,6.07,1.43-1.11,3.23-1.78,5.19-1.78,4.62,0,8.37,3.72,8.44,8.32h0v2.85c0,2.71,2.2,4.91,4.91,4.91h.81v-10.28c0-.13,0-.27-.01-.4Z",
+];
+
+/** The full "Maani" logotype. Height-driven; colour follows currentColor. */
+export function Logotype({ height = 22, className }: { height?: number; className?: string }) {
+  const vb = { x: 130.9, y: 65.8, w: 114, h: 29.4 };
   return (
-    <svg width={size} height={size} viewBox="0 0 64 64" aria-hidden="true">
-      <rect width="64" height="64" rx="18" fill="#1a1c20" />
-      <path
-        d="M16 44V22l9 13 7-10 7 10 9-13v22"
-        fill="none"
-        stroke="#fff"
-        strokeWidth="5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <circle cx="48" cy="16" r="5" fill="#f2692c" />
+    <svg
+      height={height}
+      width={(height * vb.w) / vb.h}
+      viewBox={`${vb.x} ${vb.y} ${vb.w} ${vb.h}`}
+      fill="currentColor"
+      role="img"
+      aria-label="Maani"
+      className={className}
+    >
+      <path d={M_PATH} />
+      {REST_PATHS.map((d, i) => (
+        <path key={i} d={d} />
+      ))}
     </svg>
+  );
+}
+
+/** The logotype's M on its own. */
+export function MGlyph({ size = 20, className }: { size?: number; className?: string }) {
+  return (
+    <svg
+      width={size}
+      height={(size * 28.25) / 31.13}
+      viewBox="131.2 66.63 31.13 28.25"
+      fill="currentColor"
+      aria-hidden="true"
+      className={className}
+    >
+      <path d={M_PATH} />
+    </svg>
+  );
+}
+
+/** App icon: the M on a dark rounded tile. */
+export function LogoMark({ size = 40, className = "" }: { size?: number; className?: string }) {
+  return (
+    <span
+      className={`inline-flex shrink-0 items-center justify-center bg-ink text-white ${className}`}
+      style={{ width: size, height: size, borderRadius: size * 0.3 }}
+    >
+      <MGlyph size={size * 0.5} />
+    </span>
   );
 }
 
@@ -22,8 +68,8 @@ export function Brand({ t }: { t: Dict }) {
     <div className="flex items-center gap-3">
       <LogoMark />
       <div className="leading-tight">
-        <div className="text-[15px] font-semibold">{t.studio}</div>
-        <div className="text-[12px] text-muted">{t.appName}</div>
+        <Logotype height={17} className="block text-ink" />
+        <div className="mt-1 text-[11.5px] text-muted">{t.appName}</div>
       </div>
     </div>
   );
